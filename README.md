@@ -56,11 +56,11 @@
 
 ### 1. 提交你的作品
 
-- 1. Fork 本仓库，或直接[点击此处](https://github.com/lm-xiao-fen/13kib-code/fork)                                                                              
-- 2. 在 submissions/ 下创建你的作品
-- 3. 添加你的代码和 README
-- 4. 确保总大小 ≤ 13 KiB (13,312 字节)
-- 5. 提交 Pull Request          
+- Fork 本仓库，或直接[点击此处](https://github.com/lm-xiao-fen/13kib-code/fork)                                                                              
+- 在 submissions/ 下创建你的作品
+- 添加你的代码和 README
+- 确保总大小 ≤ 13 KiB (13,312 字节)
+- 提交 Pull Request          
 
 
 ### 2. 参与月度挑战
