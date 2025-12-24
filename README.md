@@ -31,22 +31,22 @@
 
 ## 项目的结构
 
-```bash
+```  
 13kib-code/
-├── README.md                    # 本说明文件
-├── CONTRIBUTING.md              # 贡献指南
-├── CODE_OF_CONDUCT.md           # 行为准则      
-├── submissions/                 # 提交的作品
-│   ├── yy-mm-name/ # 月度主题挑战目录
-│   │   ├── [GitHubusername]projectname/        # 参与者1的作品            
-│   │   │                          ├── src/              
-│   │   │                          ├── README.md                                  
-│   │   │                          └── project                                 
-│   │   └── player2-tool/                      # 参与者2的作品
-│   └── archive/                               # 历史归档
-├── leaderboard.md                              # 荣誉榜            
-└── resources/                                  # 资源与工具
-     └──── size-checker.js                    # 文件大小检查工具        
+├── .github/
+│   └── workflows/
+│       └── check-size.yml     # CI/CD 检查工作流
+├── submissions/    
+│   └── [2024-05-01][GitHubusername]projectname/                                          
+│       ├── src/              # 源代码
+│       ├── assets/           # 静态资源
+│       ├── README.md         # 项目说明
+│       └── .13kibignore      # 可选：忽略文件列表
+├── scripts/
+│   ├── check-size.js         # 大小检查脚本
+│   └── validate-structure.js  # 结构验证脚本
+└── templates/
+    └── submission-template/   # 提交模板       
 ```
 
 ## 跃跃欲试？快速开始！
@@ -62,7 +62,7 @@
 
 ### 提交作品的格式
 
-- 你的作品要包含在一个名为 **[GitHub用户名]作品名称** 的文件夹内
+- 你的作品要包含在一个名为 **[日期年月日][GitHub用户名]作品名称** 的文件夹内
 - 文件夹内应包含作品本体、README.md、其他对你作品来说必不可少的文件
 - 如果你的项目在GitHub上有一个单独的代码仓库，你需要在仓库的README.md文件的结尾加上
 
