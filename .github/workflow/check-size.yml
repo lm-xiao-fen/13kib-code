@@ -1,0 +1,106 @@
+name: 13 KiB Size Check
+
+on:
+  pull_request:
+    paths:
+      - 'submissions/**'
+  push:
+    branches: [main]
+    paths:
+      - 'submissions/**'
+
+jobs:
+  validate-submission:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史记录，用于比较变化
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        if [ -f "package.json" ]; then
+          npm ci
+        fi
+    
+    - name: Run size check script
+      id: size-check
+      run: |
+        node scripts/check-size.js
+        
+    - name: Validate submission structure
+      id: structure-check
+      run: |
+        node scripts/validate-structure.js
+        
+    - name: Check for large files
+      id: large-files
+      run: |
+        find submissions -type f -size +13k | while read file; do
+          echo "::error file=${file}::单个文件超过 13 KiB: ${file}"
+        done
+        # 如果没有找到大文件，创建成功标志
+        if [ $(find submissions -type f -size +13k | wc -l) -eq 0 ]; then
+          echo "no-large-files=true" >> $GITHUB_OUTPUT
+        else
+          echo "no-large-files=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create detailed report
+      if: always()
+      run: |
+        echo "## 📊 13 KiB 代码检查报告" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ steps.size-check.outputs.all-valid }}" = "true" ]; then
+          echo "✅ **所有提交的作品都符合大小限制**" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **发现不符合大小限制的作品**" >> $GITHUB_STEP_SUMMARY
+          echo "请检查以下项目：" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.size-check.outputs.invalid-projects }}" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ steps.large-files.outputs.no-large-files }}" = "true" ]; then
+          echo "✅ **没有单个文件超过 13 KiB**" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "⚠️ **注意：有单个文件超过 13 KiB**" >> $GITHUB_STEP_SUMMARY
+          echo "建议将大文件分割或压缩" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📈 大小统计" >> $GITHUB_STEP_SUMMARY
+        echo "${{ steps.size-check.outputs.size-table }}" >> $GITHUB_STEP_SUMMARY
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "*检查时间: $(date)*" >> $GITHUB_STEP_SUMMARY
+        
+    - name: Comment on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const summary = fs.readFileSync(process.env.GITHUB_STEP_SUMMARY, 'utf8');
+          
+          // 从 summary 中提取 Markdown 部分
+          const prComment = `## 🤖 13 KiB 代码检查结果
+          
+${summary.split('## 📊')[1] || summary}
+
+*来自 GitHub Actions 机器人*`;
+          
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: prComment
+          });
