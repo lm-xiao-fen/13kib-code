@@ -2,9 +2,9 @@
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/13kib-code/13kib-code/check-size.yml)
 ![GitHub License](https://img.shields.io/github/license/13kib-code/13kib-code)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)  
 
-用 13 KiB 代码创造无限可能，挑战创意与技术的极限
+> 用 13 KiB 代码创造无限可能，挑战创意与技术的极限
 
 ## 关于这个项目
 
